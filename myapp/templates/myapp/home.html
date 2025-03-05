@@ -1,11 +1,18 @@
-<!DOCTYPE html>
+<!DOCTYPE html>{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctor Finder</title>
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
 </head>
 <body>
-    <h1>Welcome to Doctor Finder</h1>
+    <div class="profile-container">
+        <img src="{% static 'myapp/images/doctor.jpg' %}" alt="Doctor Image" class="profile-pic">
+        <h1>Dr. John Doe</h1>
+        <p>Specialty: Cardiologist</p>
+        <p>Experience: 10+ years</p>
+        <p>Location: New York, USA</p>
+    </div>
 </body>
 </html>
