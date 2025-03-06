@@ -13,3 +13,9 @@ def register(request):
 def doctor_list(request):
     doctors = Doctor.objects.all()  # Fetch all doctors from the database
     return render(request, 'myapp/doctor_list.html', {'doctors': doctors})
+
+def profile(request):
+    return render(request,'myapp/profile.html')
+
+def contactus(request):
+    return render(request,'myapp/contactus.html')
