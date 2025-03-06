@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Doctor</title>
+</head>
+<body>
+    <h1>Delete Doctor</h1>
+    <p>Are you sure you want to delete {{ doctor.name }}?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+    </form>
+    <a href="{% url 'doctor_list' %}">Cancel</a>
+</body>
+</html>
