@@ -27,6 +27,16 @@ urlpatterns = [
     path('add/', views.add_doctor, name='add_doctor'),
     path('edit/<int:pk>/',views.edit_doctor, name='edit_doctor'),
     path('delete/<int:pk>/', views.delete_doctor, name='delete_doctor'),
+    path('user_register/', views.user_register, name='user_register'),
+    path('login/', views.user_login, name='login'),
+    path('logout/', views.user_logout, name='logout'),
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('change-password/', views.change_password, name='change_password'),
+
+
 
 
 ]
+
+
+    

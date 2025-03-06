@@ -1,7 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Doctor
-from .forms import DoctorForm
-
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .models import Doctor,Profile
+from .forms import DoctorForm,RegisterForm, ProfileForm
 
 # Create your views here.
 
@@ -56,3 +59,62 @@ def profile(request):
 
 def contactus(request):
     return render(request,'myapp/contactus.html')
+
+
+
+# Register a new user
+def user_register(request):
+    if request.method == "POST":
+        user_form = RegisterForm(request.POST)
+        profile_form = ProfileForm(request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save(commit=False)
+            user.set_password(user_form.cleaned_data['password'])
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        user_form = RegisterForm()
+        profile_form = ProfileForm()
+    return render(request, 'myapp/user_register.html', {'user_form': user_form, 'profile_form': profile_form})
+
+
+# User login
+def user_login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'myapp/login.html', {'form': form})
+
+# User logout
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+
+# User dashboard
+@login_required
+def dashboard(request):
+    return render(request, 'myapp/dashboard.html')
+
+# Password change
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Prevents logout after password change
+            return redirect('dashboard')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'myapp/change_password.html', {'form': form})
+
+
