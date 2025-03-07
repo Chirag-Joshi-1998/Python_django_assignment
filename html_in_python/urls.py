@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
 from myapp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,6 +38,9 @@ urlpatterns = [
     path('add_ajax/', views.add_doctor_ajax, name='add_doctor_ajax'),
     path('edit_ajax/<int:doctor_id>/', views.edit_doctor_ajax, name='edit_doctor_ajax'),
     path('delete_ajax/<int:doctor_id>/', views.delete_doctor_ajax, name='delete_doctor_ajax'),
+
+    path('accounts/', include('allauth.urls'),name="provider_login_url"),  # Django-Allauth for social login
+
 
 
 
