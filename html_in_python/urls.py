@@ -32,6 +32,12 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('change-password/', views.change_password, name='change_password'),
+    #ajax
+    path('doctorlist_ajax/', views.doctor_list_ajax, name='doctor_list_ajax'),
+
+    path('add_ajax/', views.add_doctor_ajax, name='add_doctor_ajax'),
+    path('edit_ajax/<int:doctor_id>/', views.edit_doctor_ajax, name='edit_doctor_ajax'),
+    path('delete_ajax/<int:doctor_id>/', views.delete_doctor_ajax, name='delete_doctor_ajax'),
 
 
 

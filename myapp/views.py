@@ -5,6 +5,9 @@ from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from .models import Doctor,Profile
 from .forms import DoctorForm,RegisterForm, ProfileForm
+from django.http import JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
@@ -20,6 +23,10 @@ def doctor_list(request):
     return render(request, 'myapp/doctor_list.html', {'doctors': doctors})
 
 
+def doctor_list_ajax(request):
+    doctors = Doctor.objects.all()
+    return render(request, 'myapp/doctor_list_ajax.html', {'doctors': doctors})
+
 # CREATE: Add a new doctor
 def add_doctor(request):
     if request.method == "POST":
@@ -30,6 +37,24 @@ def add_doctor(request):
     else:
         form = DoctorForm()
     return render(request, 'myapp/add_doctor.html', {'form': form})
+
+
+# CREATE: Add a new doctor using ajax
+@csrf_exempt
+def add_doctor_ajax(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+       
+        doctor = Doctor.objects.create(
+            name=data['name'],
+            specialty=data['specialization'],
+            experience=data['experience'],
+            contact=data['contact'],
+            availability=data['availability'],
+            clinic_address=data['clinic_address']
+        )
+       
+        return JsonResponse({'message': 'Doctor added successfully!', 'doctor_id': doctor.id})
 
 
 # UPDATE: Edit doctor details
@@ -44,6 +69,22 @@ def edit_doctor(request, pk):
         form = DoctorForm(instance=doctor)
     return render(request, 'myapp/edit_doctor.html', {'form': form})
 
+# UPDATE: Edit doctor details using Ajax
+def edit_doctor_ajax(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    if request.method == "POST":
+        data = json.loads(request.body)
+        doctor.name=data['name']
+        doctor.specialization=data['specialization']
+        doctor.experience=data['experience']
+        doctor.contact=data['contact']
+        doctor.availability=data['availability']
+        doctor.clinic_address=data['clinic_address']
+        doctor.save()
+        return JsonResponse({'message': 'Doctor updated successfully!'})
+    
+
+
 
 # DELETE: Remove a doctor
 def delete_doctor(request, pk):
@@ -52,6 +93,12 @@ def delete_doctor(request, pk):
         doctor.delete()
         return redirect('doctor_list')
     return render(request, 'myapp/delete_doctor.html', {'doctor': doctor})
+
+# DELETE: Remove a doctor using Ajax
+def delete_doctor_ajax(request, doctor_id):
+    doctor = get_object_or_404(Doctor, id=doctor_id)
+    doctor.delete()
+    return JsonResponse({'message': 'Doctor deleted successfully!'})
 
 
 def profile(request):
